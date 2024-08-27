@@ -1,3 +1,5 @@
+import React from "react";
+
 export default async function Page() {
     /*
         no-store(SSR)で現在時刻などのdata取得
