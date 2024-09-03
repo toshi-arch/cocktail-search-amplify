@@ -11,7 +11,9 @@ export interface CocktailByIngredient {
 export const fetchCocktailByIngredient = async (name: string | string[] | undefined) => {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_LIQUOR_API_URL;
-    const response = await fetch(`${apiUrl}/cocktails/${name}`);
+    const response = await fetch(`${apiUrl}/cocktails/${name}`,{
+      cache: 'no-store'
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message);
