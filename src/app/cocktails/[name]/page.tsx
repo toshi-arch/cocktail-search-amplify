@@ -45,7 +45,7 @@ export default async function getCocktailByIngredient({ params }: { params: { na
                 <div className="grid-item col-span-6">
                     <div className='p-5'>
                         <h2 className='text-xl underline'>&quot;{ingredientName}&quot;を使用したカクテル一覧</h2>
-                        {cocktailByIngredient && cocktailByIngredient.CocktailName ?
+                        {cocktailByIngredient ?
                             (<ButtonList entity='cocktail' items={cocktailByIngredient.CocktailName.map(function (item) { return item.Name; })} />) :
                             (<p>{errorMessage}</p>)
                         }
