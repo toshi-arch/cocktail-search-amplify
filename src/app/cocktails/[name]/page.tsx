@@ -9,7 +9,14 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default async function getCocktailByIngredient({ params }: { params: { name: string } }) {
     const ingredientName: string = decodeURIComponent(params.name)
-    const cocktailByIngredient: CocktailByIngredient = await fetchCocktailByIngredient(ingredientName);
+
+    let cocktailByIngredient: CocktailByIngredient | null = null;
+    let errorMessage: string | null = null;
+    try {
+        cocktailByIngredient = await fetchCocktailByIngredient(ingredientName);
+    } catch (error: any) {
+        errorMessage = error.message
+    }
     return (
         <main className={`bg-white min-h-screen ${inter.className}`}>
             <div className="grid grid-cols-12 p-6">
@@ -38,7 +45,10 @@ export default async function getCocktailByIngredient({ params }: { params: { na
                 <div className="grid-item col-span-6">
                     <div className='p-5'>
                         <h2 className='text-xl underline'>&quot;{ingredientName}&quot;を使用したカクテル一覧</h2>
-                        <ButtonList entity='cocktail' items={cocktailByIngredient.CocktailName.map(function (item) { return item.Name; })} />
+                        {errorMessage ?
+                            (<p>{errorMessage}</p>) :
+                            (<ButtonList entity='cocktail' items={cocktailByIngredient.CocktailName.map(function (item) { return item.Name; })} />)
+                        }
                     </div>
                 </div>
                 <div className="grid-item col-span-3"></div>
