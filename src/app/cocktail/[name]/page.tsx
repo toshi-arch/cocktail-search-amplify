@@ -39,7 +39,16 @@ const getUnitLabel = (unit: Unit) => {
 };
 
 export default async function getCocktailDetail({ params }: { params: { name: string } }) {
-    const cocktailByName: Cocktail = await fetchCocktailByName(params.name);
+    //const cocktailByName: Cocktail = await fetchCocktailByName(params.name);
+    const cocktailName: string = decodeURIComponent(params.name)
+
+    let cocktailByName: Cocktail | null = null;
+    let errorMessage: string | null = null;
+    try {
+        cocktailByName = await fetchCocktailByName(params.name);
+    } catch (error: any) {
+        errorMessage = error.message
+    }
     return (
         <main className={`bg-white min-h-screen ${inter.className}`}>
             <div className="grid grid-cols-12 p-6">
@@ -61,35 +70,38 @@ export default async function getCocktailDetail({ params }: { params: { name: st
             <div className='grid grid-cols-12'>
                 <div className="grid-item col-span-3" />
                 <div className='grid-item col-span-6'>
-                    <h2 className='text-3xl border-b border-black mb-10'>{cocktailByName.Name}</h2>
-                    <div className='flex flex-col gap-6'>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th className='border-b border-dotted px-2 py-0.5 align-top text-xl text-gray-400 text-left'>材料</th>
-                                    <th className='border-b border-dotted px-2 py-0.5 align-top text-xl text-gray-400 text-right'>分量</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cocktailByName.Ingredients.map((ingredient, index) => (
-                                    <tr key={index}>
-                                        <td className='border-b border-dotted px-2 py-0.5 align-top text-xl text-left'>{ingredient.Name}</td>
-                                        <td className='border-b border-dotted px-2 py-0.5 align-top text-xl text-right'>
-                                            {ingredient.Unit === Unit.properQuontity || ingredient.Unit === Unit.fullUp ? '' : ingredient.Amount} {getUnitLabel(ingredient.Unit)}
-                                        </td>
+                    <h2 className='text-3xl border-b border-black mb-10'>{cocktailName}</h2>
+                    {cocktailByName ?
+                        (<div className='flex flex-col gap-6'>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th className='border-b border-dotted px-2 py-0.5 align-top text-xl text-gray-400 text-left'>材料</th>
+                                        <th className='border-b border-dotted px-2 py-0.5 align-top text-xl text-gray-400 text-right'>分量</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        <table>
-                            <thead>
-                                <th className='border-b border-dotted px-2 py-0.5 align-top text-xl text-gray-400 text-left'>レシピ</th>
-                                <tr>
-                                    <td className='px-2 py-0.5 align-top text-xl text-left'>{cocktailByName.Recipe}</td>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {cocktailByName.Ingredients.map((ingredient, index) => (
+                                        <tr key={index}>
+                                            <td className='border-b border-dotted px-2 py-0.5 align-top text-xl text-left'>{ingredient.Name}</td>
+                                            <td className='border-b border-dotted px-2 py-0.5 align-top text-xl text-right'>
+                                                {ingredient.Unit === Unit.properQuontity || ingredient.Unit === Unit.fullUp ? '' : ingredient.Amount} {getUnitLabel(ingredient.Unit)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <table>
+                                <thead>
+                                    <th className='border-b border-dotted px-2 py-0.5 align-top text-xl text-gray-400 text-left'>レシピ</th>
+                                    <tr>
+                                        <td className='px-2 py-0.5 align-top text-xl text-left'>{cocktailByName.Recipe}</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>) :
+                        (<p>{errorMessage}</p>)
+                    }
                 </div>
                 <div className="grid-item col-span-3" />
             </div>
