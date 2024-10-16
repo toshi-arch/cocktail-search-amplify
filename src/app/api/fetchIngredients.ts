@@ -10,7 +10,7 @@ export interface Ingredient {
 
 export const fetchIngredients = async () => {
   try {
-    const apiUrl = process.env.liquor_app_ec2_IPv4;
+    const apiUrl = process.env.NEXT_PUBLIC_LIQUOR_API_URL;
     const response = await fetch(`${apiUrl}/ingredients/`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
