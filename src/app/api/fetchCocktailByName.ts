@@ -13,7 +13,7 @@ export interface Ingredient {
 
 export const fetchCocktailByName = async (name: string) => {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_LIQUOR_API_URL;
+    const apiUrl = process.env.liquor_app_ec2_IPv4;
     const response = await fetch(`${apiUrl}/cocktail/${name}`);
     if (!response.ok) {
       const errorData = await response.json();
